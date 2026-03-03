@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime
 import random
 
 # ==========================================
@@ -37,20 +37,19 @@ def fetch_daily_matches(league_name):
     
     # --- TENTATIVO RECUPERO DATI REALI (FOOTBALL-DATA.ORG) ---
     if API_KEY != "DEMO":
-        # Filtro: Da oggi a +7 giorni per evitare match troppo lontani
-        date_from = datetime.now().strftime("%Y-%m-%d")
-        date_to = (datetime.now() + timedelta(days=7)).strftime("%Y-%m-%d")
-        
         url = f"https://api.football-data.org/v4/competitions/{league_code}/matches"
         headers = {"X-Auth-Token": API_KEY}
-        params = {"dateFrom": date_from, "dateTo": date_to}
+        
+        # Cerchiamo i match programmati per oggi/prossimi giorni
+        params = {"status": "SCHEDULED"}
         
         try:
             response = requests.get(url, headers=headers, params=params, timeout=10)
             res_data = response.json()
+            
             fixtures = res_data.get('matches', [])
             
-            # Se non ci sono match programmati a breve, carichiamo gli ultimi 10 finiti
+            # Se non ci sono match oggi, carichiamo gli ultimi 10 finiti per analisi
             if not fixtures:
                 params_last = {"status": "FINISHED", "limit": 10}
                 response = requests.get(url, headers=headers, params=params_last, timeout=10)
@@ -58,8 +57,7 @@ def fetch_daily_matches(league_name):
 
             if fixtures:
                 real_analyzed = []
-                # Limite a 10 match per evitare liste troppo lunghe (specialmente in Premier)
-                for item in fixtures[:10]:
+                for item in fixtures:
                     home = item['homeTeam']['shortName'] or item['homeTeam']['name']
                     away = item['awayTeam']['shortName'] or item['awayTeam']['name']
                     
