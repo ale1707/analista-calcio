@@ -10,10 +10,17 @@ import random
 st.set_page_config(page_title="PRO-BET ANALYZER AI", layout="wide", page_icon="⚽")
 
 # RECUPERO CHIAVE DAI SECRETS (Oppure DEMO se non configurata)
+# ==========================================
+# ⚙️ CONFIGURAZIONE E DIAGNOSTICA
+# ==========================================
+# Proviamo a leggere la chiave. Se non esiste, mostriamo un errore chiaro.
 if "MY_API_KEY" in st.secrets:
     API_KEY = st.secrets["MY_API_KEY"]
+    st.sidebar.success("✅ CHIAVE TROVATA! Il sistema proverà a connettersi.")
 else:
-    API_KEY = "DEMO" 
+    API_KEY = "DEMO"
+    st.sidebar.error("⚠️ CHIAVE NON TROVATA NEI SECRETS! L'app resta in modalità DEMO.")
+    st.sidebar.info("Vai nelle impostazioni di Streamlit -> Secrets e aggiungi: MY_API_KEY = 'tua_chiave'")
 
 LEAGUES = {
     "Serie A 🇮🇹": 135,
@@ -168,3 +175,4 @@ elif menu == "💎 4. MyCombo Sisal":
         big_match = sorted(all_matches, key=lambda x: x['xG_home'], reverse=True)[0]
         st.subheader(f"🏆 {big_match['match']}")
         st.error(f"COMBO: {big_match['pronostico']} + Over 8.5 Corner + Over 2.5 Cartellini")
+
