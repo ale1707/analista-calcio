@@ -38,7 +38,7 @@ def fetch_daily_matches(league_name):
             "x-rapidapi-key": API_KEY,
             "x-rapidapi-host": "v3.football.api-sports.io"
         }
-        params = {"date": today, "league": league_id, "season": "2025"}
+        params = {"league": league_id, "season": "2025", "next": 10}
         
         try:
             response = requests.get(url, headers=headers, params=params)
@@ -183,4 +183,5 @@ elif menu == "💎 4. MyCombo Sisal":
         big_match = sorted(all_matches, key=lambda x: x['xG_home'], reverse=True)[0]
         st.subheader(f"🏆 {big_match['match']}")
         st.error(f"COMBO: {big_match['pronostico']} + Over 8.5 Corner + Over 2.5 Cartellini")
+
         st.caption(f"Motivazione: Pressione offensiva prevista ({big_match['xG_home']} xG) genera corner e falli.")
