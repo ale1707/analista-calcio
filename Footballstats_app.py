@@ -185,3 +185,4 @@ elif menu == "💎 4. MyCombo Sisal":
         st.error(f"COMBO: {big_match['pronostico']} + Over 8.5 Corner + Over 2.5 Cartellini")
 
         st.caption(f"Motivazione: Pressione offensiva prevista ({big_match['xG_home']} xG) genera corner e falli.")
+
